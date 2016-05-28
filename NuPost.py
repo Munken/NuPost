@@ -65,7 +65,11 @@ class NuPost:
             raise RuntimeError("No data is being written to disc")
 
         self._t_state = TapeState.RUNNING
-        print "Opened file %s%d" % (prefix, run)
+        print "%s, %s - Opened file %s%d" % (self.get_local_date(), self.get_local_time(), prefix, run)
+	f=open('log','a')
+        s=str("%s, %s - Opened file %s%d\n" % (self.get_local_date(), self.get_local_time(), prefix, run))
+	f.write(s)
+        f.close()
 
     def stop(self):
         if self._t_state != TapeState.RUNNING:
@@ -88,10 +92,10 @@ class NuPost:
                 if state == TapeState.STOPPED: break
 
             if state != TapeState.STOPPED:
-                print "Tape have not switched to stopped state! Retrying"
+                print "Tape has not switched to stopped state! Retrying"
                 continue
             elif run != self._run+1:
-                print "Run# have not incremented. Retrying"
+                # print "Run# has not incremented. Retrying"
                 continue
             else:
                 sucess = True
@@ -99,8 +103,12 @@ class NuPost:
         if not sucess:
             print "Stopping TapeServer failed 10 times. Something is broken..."
         else:
-            print "Closed file with %d kB" % self.get_tape_rate()['kbytes']
-            self._run = run
+            print "%s, %s - Closed file with %d kB" % (self.get_local_date(), self.get_local_time(), self.get_tape_rate()['kbytes'])
+            f=open('log','a')
+	    s=str("%s, %s - Closed file with %d kB\n" % (self.get_local_date(), self.get_local_time(), self.get_tape_rate()['kbytes']))
+ 	    f.write(s)
+	    f.close()
+	    self._run = run
             self._t_state = TapeState.STOPPED
 
     def status(self):
@@ -186,6 +194,14 @@ class NuPost:
             contents = error.read()
             print contents
             raise
+    
+    def get_local_date(self):
+         from time import strftime, localtime
+         return str(strftime("%a, %d %b %Y", localtime())) 
+         
+    def get_local_time(self):
+         from time import strftime, localtime
+         return str(strftime("%X", localtime()))
 
     def get_tape_rate(self):
         try:
