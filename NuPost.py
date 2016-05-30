@@ -3,6 +3,9 @@ import urllib2
 
 import time
 
+import os
+log_file = os.path.dirname(__file__) + "/../nutaq.log"
+
 MERGE_SUFFIX = "MERGE/Merge.tml"
 TAPE_SUFFIX = "TapeService/TapeService.tml"
 
@@ -66,7 +69,7 @@ class NuPost:
 
         self._t_state = TapeState.RUNNING
         print "%s, %s - Opened file %s%d" % (self.get_local_date(), self.get_local_time(), prefix, run)
-	f=open('log','a')
+	f=open(log_file,'a')
         s=str("%s, %s - Opened file %s%d\n" % (self.get_local_date(), self.get_local_time(), prefix, run))
 	f.write(s)
         f.close()
@@ -104,7 +107,7 @@ class NuPost:
             print "Stopping TapeServer failed 10 times. Something is broken..."
         else:
             print "%s, %s - Closed file with %d kB" % (self.get_local_date(), self.get_local_time(), self.get_tape_rate()['kbytes'])
-            f=open('log','a')
+            f=open(log_file,'a')
 	    s=str("%s, %s - Closed file with %d kB\n" % (self.get_local_date(), self.get_local_time(), self.get_tape_rate()['kbytes']))
  	    f.write(s)
 	    f.close()
