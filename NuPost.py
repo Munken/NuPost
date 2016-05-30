@@ -4,6 +4,11 @@ import urllib2
 import time
 
 import os
+
+import colorama
+from colorama import init, Fore, Back, Style
+colorama.init(autoreset=True);
+
 log_file = os.path.dirname(__file__) + "/../nutaq.log"
 
 MERGE_SUFFIX = "MERGE/Merge.tml"
@@ -68,7 +73,7 @@ class NuPost:
             raise RuntimeError("No data is being written to disc")
 
         self._t_state = TapeState.RUNNING
-        print "%s, %s - Opened file %s%d" % (self.get_local_date(), self.get_local_time(), prefix, run)
+        print Fore.GREEN + Style.BRIGHT + "%s, %s - Opened file %s%d" % (self.get_local_date(), self.get_local_time(), prefix, run)
 	f=open(log_file,'a')
         s=str("%s, %s - Opened file %s%d\n" % (self.get_local_date(), self.get_local_time(), prefix, run))
 	f.write(s)
@@ -106,7 +111,7 @@ class NuPost:
         if not sucess:
             print "Stopping TapeServer failed 10 times. Something is broken..."
         else:
-            print "%s, %s - Closed file with %d kB" % (self.get_local_date(), self.get_local_time(), self.get_tape_rate()['kbytes'])
+            print Fore.RED + Style.BRIGHT + "%s, %s - Closed file with %d kB" % (self.get_local_date(), self.get_local_time(), self.get_tape_rate()['kbytes'])
             f=open(log_file,'a')
 	    s=str("%s, %s - Closed file with %d kB\n" % (self.get_local_date(), self.get_local_time(), self.get_tape_rate()['kbytes']))
  	    f.write(s)
@@ -117,12 +122,23 @@ class NuPost:
     def status(self):
         t_state, run = self.get_tape_state()
         m_state = self.get_merge_transfer_state()
-        rate = self.get_tape_rate()
+       	rate = self.get_tape_rate()
+	
+	if t_state == TapeState.RUNNING:
 
-        print "TS state:              %s" % t_state
-        print "Merge transfer state:  %s" % m_state
-        print "Run#:                  %d" % run
-        print "Writen:                %d kB (%d blocks)" % (rate['kbytes'], rate['block'])
+            print Fore.GREEN + Style.BRIGHT + "TS state:              %s" % t_state
+            print Fore.GREEN + Style.BRIGHT + "Merge transfer state:  %s" % m_state
+            print Fore.GREEN + Style.BRIGHT + "Run#:                  %d" % run
+            print Fore.GREEN + Style.BRIGHT + "Writen:                %d kB (%d blocks)" % (rate['kbytes'], rate['block'])
+
+
+	else:
+
+            print Fore.RED + Style.BRIGHT + "TS state:              %s" % t_state
+            print Fore.RED + Style.BRIGHT + "Merge transfer state:  %s" % m_state
+            print Fore.RED + Style.BRIGHT + "Run#:                  %d" % run
+            print Fore.RED + Style.BRIGHT + "Writen:                %d kB (%d blocks)" % (rate['kbytes'], rate['block'])
+	    
 
     def toggle_merge(self):
         url = self._build_merge_url()
