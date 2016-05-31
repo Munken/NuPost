@@ -73,7 +73,7 @@ class NuPost:
             raise RuntimeError("No data is being written to disc")
 
         self._t_state = TapeState.RUNNING
-        print Fore.GREEN + Style.BRIGHT + "%s, %s - Opened file %s%d" % (self.get_local_date(), self.get_local_time(), prefix, run)
+        print Fore.GREEN + "%s, %s - Opened file %s%d" % (self.get_local_date(), self.get_local_time(), prefix, run)
 	f=open(log_file,'a')
         s=str("%s, %s - Opened file %s%d\n" % (self.get_local_date(), self.get_local_time(), prefix, run))
 	f.write(s)
@@ -111,7 +111,7 @@ class NuPost:
         if not sucess:
             print "Stopping TapeServer failed 10 times. Something is broken..."
         else:
-            print Fore.RED + Style.BRIGHT + "%s, %s - Closed file with %d kB" % (self.get_local_date(), self.get_local_time(), self.get_tape_rate()['kbytes'])
+            print Fore.RED + "%s, %s - Closed file with %d kB" % (self.get_local_date(), self.get_local_time(), self.get_tape_rate()['kbytes'])
             f=open(log_file,'a')
 	    s=str("%s, %s - Closed file with %d kB\n" % (self.get_local_date(), self.get_local_time(), self.get_tape_rate()['kbytes']))
  	    f.write(s)
@@ -126,18 +126,18 @@ class NuPost:
 	
 	if t_state == TapeState.RUNNING:
 
-            print Fore.GREEN + Style.BRIGHT + "TS state:              %s" % t_state
-            print Fore.GREEN + Style.BRIGHT + "Merge transfer state:  %s" % m_state
-            print Fore.GREEN + Style.BRIGHT + "Run#:                  %d" % run
-            print Fore.GREEN + Style.BRIGHT + "Writen:                %d kB (%d blocks)" % (rate['kbytes'], rate['block'])
+            print Fore.GREEN + "TS state:              %s" % t_state
+            print Fore.GREEN + "Merge transfer state:  %s" % m_state
+            print Fore.GREEN + "Run#:		       %d" % run
+            print Fore.GREEN + "Writen: 	       %d kB (%d blocks)" % (rate['kbytes'], rate['block'])
 
 
 	else:
 
-            print Fore.RED + Style.BRIGHT + "TS state:              %s" % t_state
-            print Fore.RED + Style.BRIGHT + "Merge transfer state:  %s" % m_state
-            print Fore.RED + Style.BRIGHT + "Run#:                  %d" % run
-            print Fore.RED + Style.BRIGHT + "Writen:                %d kB (%d blocks)" % (rate['kbytes'], rate['block'])
+            print Fore.RED +  "TS state:	      %s" % t_state
+            print Fore.RED +  "Merge transfer state:  %s" % m_state
+            print Fore.RED +  "Run#:		      %d" % run
+            print Fore.RED +  "Writen:  	      %d kB (%d blocks)" % (rate['kbytes'], rate['block'])
 	    
 
     def toggle_merge(self):
