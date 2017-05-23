@@ -35,16 +35,13 @@ class NuPost:
         self._t_state, self._run = self.get_tape_state()
         self._m_state = self.get_merge_transfer_state()
 
-    def go(self, prefix, run_num = None):
+    def go(self, prefix, comment):
         if self._t_state != TapeState.STOPPED:
             raise RuntimeError("Cannot GO if TapeServer is not STOPPED")
 
         if not prefix.endswith("_"):
             prefix += "_"
-
-        if run_num is not None:
-            self.set_run_num(run_num)
-
+       
         self.set_file(prefix)
 
         if self._m_state == MergeState.STOPPED:
@@ -75,11 +72,11 @@ class NuPost:
         self._t_state = TapeState.RUNNING
         print Fore.GREEN + "%s, %s - Opened file %s%d" % (self.get_local_date(), self.get_local_time(), prefix, run)
 	f=open(log_file,'a')
-        s=str("%s, %s - Opened file %s%d\n" % (self.get_local_date(), self.get_local_time(), prefix, run))
+        s=str("%s, %s - Opened file %s%d \t %s \n" % (self.get_local_date(), self.get_local_time(), prefix, run, comment))
 	f.write(s)
         f.close()
 
-    def stop(self):
+    def stop(self, comment):
         if self._t_state != TapeState.RUNNING:
             raise RuntimeError("Cannot STOP if TapeServer is not RUNNING")
 
@@ -113,7 +110,7 @@ class NuPost:
         else:
             print Fore.RED + "%s, %s - Closed file with %d kB" % (self.get_local_date(), self.get_local_time(), self.get_tape_rate()['kbytes'])
             f=open(log_file,'a')
-	    s=str("%s, %s - Closed file with %d kB\n" % (self.get_local_date(), self.get_local_time(), self.get_tape_rate()['kbytes']))
+	    s=str("%s, %s - Closed file with %d kB \t %s \n" % (self.get_local_date(), self.get_local_time(), self.get_tape_rate()['kbytes'], comment))
  	    f.write(s)
 	    f.close()
 	    self._run = run
